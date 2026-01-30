@@ -22,8 +22,7 @@ function Inicio() {
       var ctda = document.getElementsByClassName("ctd");
       var foot = document.getElementsByClassName("rdp");
       res.forEach(item => {
-        id = item.id;
-		head[0].innerHTML = item.head;
+        head[0].innerHTML = item.head;
 		ctda[0].innerHTML = item.ctds;
     	foot[0].innerHTML = item.foot;
       });
@@ -33,7 +32,9 @@ function Inicio() {
 }
 
 function sistema(ip,ir){
-  if(ip != 0){
+    var ctda = document.getElementsByClassName("ctd");
+    if(ip != 0){
+    ctda[0].style.background = "rgba(100,100,100,0.8)";
     sms[0].style.display = "flex";
     var fd = new FormData();
     fd.append('id', id);
@@ -45,15 +46,84 @@ function sistema(ip,ir){
       if (xhr.readyState === 4 && xhr.status === 200) {
         var res = JSON.parse(xhr.responseText);
         res.forEach(item => {
-          id = item.id;
-		  sms[0].innerHTML = item.sms;
+          sms[0].innerHTML = item.sms;
         });
       }
     }
     xhr.send(fd);
   }else{
     sms[0].style.display = "none";
+    ctda[0].style.background = "rgba(255,255,255,1)";
   }
 }
-//setInterval(rodarsms, 100);
-window.onload = Inicio(1);
+
+function entrar() {
+  var ibnacss = document.getElementsByClassName("ibnacss")[0].value;
+  var fd = new FormData();
+  fd.append('id', id);
+  fd.append('idn', 1);
+  fd.append('ibnacss', ibnacss);
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'codigo/bot.php', true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      var res = JSON.parse(xhr.responseText);
+      res.forEach(item => {
+        if(item.rt >= 1){
+          id = item.rt;
+          Inicio();
+          sistema(12,2);
+		}else{
+		  id = 0;
+		  Inicio();
+		  sistema(12,1);
+		}
+	  });
+    }
+  }
+  xhr.send(fd);
+}
+function registrar() {
+  var usuacs = document.getElementsByClassName("usuacs")[0].value;
+  var ibnacs = document.getElementsByClassName("ibnacs")[0].value;
+  var fd = new FormData();
+  fd.append('id', id);
+  fd.append('idn', 2);
+  fd.append('usuacs', usuacs);
+  fd.append('ibnacs', ibnacs);
+   var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'codigo/bot.php', true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      var res = JSON.parse(xhr.responseText);
+      res.forEach(item => {
+        if(item.rt >= 1){
+          id = item.rt;
+          Inicio();
+          sistema(14,2);
+		}else{
+		  id = 0;
+		  Inicio();
+		  sistema(14,1);
+		}
+	  });
+    }
+  }
+  xhr.send(fd);
+}
+function rodando() {
+  var fd = new FormData();
+  fd.append('id', id);
+  fd.append('idn', 1);
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'codigo/script.php', true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      var res = JSON.parse(xhr.responseText);
+      res.forEach(item => {});
+    }
+  }
+  xhr.send(fd);
+}
+setInterval(rodando, 1000);
+window.onload = Inicio();
