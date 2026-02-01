@@ -209,9 +209,14 @@ if($ip == 1){
 }else if($ip == 9){
   //sistema de entrar
   $ttl = "Modo de conexão";
+  $sdx = "";
+  if($id){
+    $sdx = "<i onclick='sistema(15,$id)' class='cclaro'> - </i>";
+  }
   $codigo = "
   <div class='flex lg'>
   	<i onclick='sistema(12,0)' class='cazul'>Entrar</i>
+  	$sdx
     <i onclick='sistema(14,0)'class='cazul'>Registrar</i>
   </div>
   ";
@@ -343,6 +348,42 @@ if($ip == 1){
     <i onclick='registrar()' class='cs registro lg radiu azul fas fa-check cbranco'></i>
   </div>
   ";
+}else if($ip == 15){
+  //informação de investimento
+  $ttl = "Painel adm &nbsp;
+    <i onclick='sistema(15,2)' class='fas fa-user'></i>&nbsp;&nbsp;
+    <i onclick='sistema(15,3)' class='fas fa-wallet'></i>&nbsp;&nbsp;
+    <i onclick='sistema(15,4)' class='fas fa-credit-card'></i>
+  ";
+  if($ir == 2){
+    $codigo = "
+      <div class='flex lg'>
+  	    <i class='cpreto'>Total de usuarios:</i>
+        <i class='cazul'>1947</i>
+      </div>
+    ";
+  }else if($ir == 3){
+    $codigo = "
+      <div class='flex lg'>
+  	    <i class='cpreto'>Depositos feitos:</i>
+        <i class='cazul'>9084</i>
+      </div>
+    ";
+  }else if($ir == 4){
+    $codigo = "
+      <div class='flex lg'>
+  	    <i class='cpreto'>Saques feitos:</i>
+        <i class='cazul'>30488</i>
+      </div>
+    ";
+  }else if($ir == 1){
+    $codigo = "
+      <div class='flex lg'>
+  	    <i class='cpreto'>Bem vindo senhor!</i>
+        <i class='cazul'>terminal</i>
+      </div>
+    ";
+  }
 }
 
 //campo executalvel do painel
