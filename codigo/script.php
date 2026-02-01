@@ -10,7 +10,7 @@ if($idn == 1){
   $ev = $cnx->prepare("SELECT * FROM evkz WHERE win = :win GROUP BY id");
   $ev->execute([':win' => $win]);
   $vev = $ev->fetchAll(PDO::FETCH_ASSOC);
-  unlink("debug_log.txt");
+  //unlink("debug_log.txt");
   foreach($vev as $v){
    $idi = base64_decode(urldecode($v["idi"]));
    $idu = base64_decode(urldecode($v["idu"]));
@@ -32,7 +32,7 @@ if($idn == 1){
        $kz = intval(base64_decode(urldecode($v["kzg"])));
        $vlr = $dm + $kz;
        $vlr = urlencode(base64_encode($vlr));
-       //atualizar dadps 
+       //atualizar dadps
        $rd = $cnx->prepare("UPDATE rdkz SET win = :win WHERE id = :id");
        $rd->execute([':win' => $w, ':id' => $vrd["id"]]);
        $ev = $cnx->prepare("UPDATE evkz SET win = :win WHERE id = :id");

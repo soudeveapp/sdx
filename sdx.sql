@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 30-Jan-2026 às 23:46
+-- Tempo de geração: 01-Fev-2026 às 20:10
 -- Versão do servidor: 10.4.6-MariaDB
 -- versão do PHP: 7.3.10
 
@@ -58,6 +58,48 @@ CREATE TABLE `rdkz` (
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `spkz`
+--
+
+CREATE TABLE `spkz` (
+  `id` int(11) NOT NULL,
+  `pcv` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Extraindo dados da tabela `spkz`
+--
+
+INSERT INTO `spkz` (`id`, `pcv`) VALUES
+(1, 'MTAw'),
+(2, 'MTUwMA%3D%3D'),
+(3, 'MjUwMA%3D%3D'),
+(4, 'NDUwMA%3D%3D'),
+(5, 'NzAwMA%3D%3D'),
+(6, 'MTA4MDA%3D'),
+(7, 'MTUwMDA%3D'),
+(8, 'MjQwMDA%3D'),
+(9, 'Mzk1MDA%3D'),
+(10, 'NTAwMDA%3D');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `sqdp`
+--
+
+CREATE TABLE `sqdp` (
+  `id` int(11) NOT NULL,
+  `idu` text NOT NULL,
+  `vlr` text NOT NULL,
+  `std` text NOT NULL,
+  `tps` text NOT NULL,
+  `dta` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura da tabela `uskz`
 --
 
@@ -87,6 +129,18 @@ ALTER TABLE `rdkz`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Índices para tabela `spkz`
+--
+ALTER TABLE `spkz`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Índices para tabela `sqdp`
+--
+ALTER TABLE `sqdp`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Índices para tabela `uskz`
 --
 ALTER TABLE `uskz`
@@ -106,6 +160,18 @@ ALTER TABLE `evkz`
 -- AUTO_INCREMENT de tabela `rdkz`
 --
 ALTER TABLE `rdkz`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `spkz`
+--
+ALTER TABLE `spkz`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de tabela `sqdp`
+--
+ALTER TABLE `sqdp`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
