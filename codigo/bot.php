@@ -4,6 +4,7 @@ $idn = $_POST["idn"];
 $idu = $_POST["id"];
 $id = 0;
 $dt = date("d/m/Y h:i");
+$cdgadm = "YTRmNTRiNmEwNzE4NzM3MTNiMjllMDZjNGEzN2Q3YmE%3D";
 if($idn == 1){
   //painel login
   $ibn = trim(htmlspecialchars(strip_tags(filter_input(INPUT_POST, "ibnacss", FILTER_SANITIZE_SPECIAL_CHARS))));
@@ -90,6 +91,70 @@ if($idn == 1){
     $stmtip = $cnx->prepare("INSERT INTO sqdp(id,idu,vlr,std,tps,dta) VALUES (null,:idu,:vlr,:std,:tps,:dta)");
     $stmtip->execute([':idu' => $idu,':vlr' => $vlr,':std' => $std,':tps' => $tps,':dta' => $dtm]);
     $id = $iduu;
+  }
+}else if($idn == 5 || $idn == 6){
+  //depositos em operação
+  $cdg = intval(trim(htmlspecialchars(strip_tags(filter_input(INPUT_POST, "cdg", FILTER_SANITIZE_SPECIAL_CHARS)))));
+  $cpf = intval(filter_input(INPUT_POST, "cpf", FILTER_SANITIZE_SPECIAL_CHARS));
+  $idp = intval(filter_input(INPUT_POST, "idp", FILTER_SANITIZE_SPECIAL_CHARS));
+  $cdgbin = urlencode(base64_encode(md5($cdg)));
+  if ($cpf >= 1 && $idp >= 1 && strlen($cdg) == 6 && $cdgadm == $cdgbin) {
+    $us = $cnx->prepare("SELECT id, dm FROM uskz WHERE id = :id LIMIT 1");
+    $us->execute([':id' => $cpf]);
+    $vus = $us->fetch(PDO::FETCH_ASSOC);
+    $sd = $cnx->prepare("SELECT id, std, vlr FROM sqdp WHERE id = :id LIMIT 1");
+    $sd->execute([':id' => $idp]);
+    $vsd = $sd->fetch(PDO::FETCH_ASSOC);
+    $std = urlencode(base64_encode("pendente"));
+    if($idn == 5 && $std == $vsd["std"]){
+      $std = urlencode(base64_encode("falhou"));
+      $atsd = $cnx->prepare("UPDATE sqdp SET std = :std WHERE id = :id LIMIT 1");
+      $catsd = $atsd->execute([":std" => $std ,":id" => $idp]);
+      $id = $idu;
+    }else if($idn == 6 && $std == $vsd["std"]){
+      $std = urlencode(base64_encode("concluido"));
+      $vla = intval(base64_decode(urldecode($vus["dm"])));
+      $vlb = intval(base64_decode(urldecode($vsd["vlr"])));
+      $vla = $vla + $vlb;
+      $vla = urlencode(base64_encode($vla));
+      $atsd = $cnx->prepare("UPDATE sqdp SET std = :std WHERE id = :id LIMIT 1");
+      $catsd = $atsd->execute([":std" => $std ,":id" => $idp]);
+      $atus = $cnx->prepare("UPDATE uskz SET dm = :dm WHERE id = :id LIMIT 1");
+      $catus = $atus->execute([":dm" => $vla ,":id" => $cpf]);
+      $id = $idu;
+    }
+  }
+}else if($idn == 7 || $idn == 8){
+  //saques em operação
+  $cdg = intval(trim(htmlspecialchars(strip_tags(filter_input(INPUT_POST, "cdg", FILTER_SANITIZE_SPECIAL_CHARS)))));
+  $cpf = intval(filter_input(INPUT_POST, "cpf", FILTER_SANITIZE_SPECIAL_CHARS));
+  $idp = intval(filter_input(INPUT_POST, "idp", FILTER_SANITIZE_SPECIAL_CHARS));
+  $cdgbin = urlencode(base64_encode(md5($cdg)));
+  if ($cpf >= 1 && $idp >= 1 && strlen($cdg) == 6 && $cdgadm == $cdgbin) {
+    $us = $cnx->prepare("SELECT id, dm FROM uskz WHERE id = :id LIMIT 1");
+    $us->execute([':id' => $cpf]);
+    $vus = $us->fetch(PDO::FETCH_ASSOC);
+    $sd = $cnx->prepare("SELECT id, std, vlr FROM sqdp WHERE id = :id LIMIT 1");
+    $sd->execute([':id' => $idp]);
+    $vsd = $sd->fetch(PDO::FETCH_ASSOC);
+    $std = urlencode(base64_encode("pendente"));
+    if($idn == 7 && $std == $vsd["std"]){
+      $std = urlencode(base64_encode("falhou"));
+      $vla = intval(base64_decode(urldecode($vus["dm"])));
+      $vlb = intval(base64_decode(urldecode($vsd["vlr"])));
+      $vla = $vla + $vlb;
+      $vla = urlencode(base64_encode($vla));
+      $atsd = $cnx->prepare("UPDATE sqdp SET std = :std WHERE id = :id LIMIT 1");
+      $catsd = $atsd->execute([":std" => $std ,":id" => $idp]);
+      $atus = $cnx->prepare("UPDATE uskz SET dm = :dm WHERE id = :id LIMIT 1");
+      $catus = $atus->execute([":dm" => $vla ,":id" => $cpf]);
+      $id = $idu;
+    }else if($idn == 8 && $std == $vsd["std"]){
+      $std = urlencode(base64_encode("concluido"));
+      $atsd = $cnx->prepare("UPDATE sqdp SET std = :std WHERE id = :id LIMIT 1");
+      $catsd = $atsd->execute([":std" => $std ,":id" => $idp]);
+      $id = $idu;
+    }
   }
 }
 

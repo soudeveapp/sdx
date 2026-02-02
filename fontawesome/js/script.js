@@ -47,6 +47,9 @@ function sistema(ip,ir){
         var res = JSON.parse(xhr.responseText);
         res.forEach(item => {
           Inicio();
+          if(ip == 6 && ir >= 1){
+            sistema(ip,0);
+          }
           sms[0].innerHTML = item.sms;
         });
       }
@@ -83,6 +86,32 @@ function sqdp(ii){
         if(item.rt >= 1){
           Inicio();
           sistema(8,0);
+		}else{
+		  Inicio();
+		}
+	  });
+    }
+  }
+  xhr.send(fd);
+}
+
+function admin(ii, cpf, idp){
+  var cdg = document.getElementsByClassName("cdgadm")[0].value;
+  var fd = new FormData();
+  fd.append('id', id);
+  fd.append('idn', ii);
+  fd.append('cpf', cpf);
+  fd.append('idp', idp);
+  fd.append('cdg', cdg);
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'codigo/bot.php', true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      var res = JSON.parse(xhr.responseText);
+      res.forEach(item => {
+        if(item.rt >= 1){
+          Inicio();
+          sistema(15,1);
 		}else{
 		  Inicio();
 		}

@@ -14,7 +14,7 @@ $vips = isset($vkz["id"]) ? base64_decode(urldecode($vkz["gh"])) : 0;
 $pye = isset($vkz["id"]) ? base64_decode(urldecode($vkz["py"])) : "Indisponivél...";
 $kz = isset($vkz["id"]) ? number_format(intval(base64_decode(urldecode($vkz["dm"]))), 0, ',', '.') : 0;
 $ckz = isset($vkz["id"]) ? intval(base64_decode(urldecode($vkz["dm"]))) : 0;
-
+$cdgadm = "YTRmNTRiNmEwNzE4NzM3MTNiMjllMDZjNGEzN2Q3YmE%3D";
 if($ip == 1){
   //informação de investimento
   $ttl = "Informação SDX";
@@ -78,7 +78,7 @@ if($ip == 1){
   }else{
 	$codigo = "
 	  <i class='cverde fas fa-credit-card'></i>
-	  <i class='cazul'> AO06 0420 0000 0000 0321 4846 5</i><br>
+	  <i class='cazul'> AO06 0420 0000 0000 0840 2057 3</i><br>
 	  <i class='cazul fas fa-user'></i>
 	  <i class='cazul'> James Bonde Runner</i><br>
 	  <div class='flex'>
@@ -121,7 +121,7 @@ if($ip == 1){
 	  }
 	  $codigo .= "<br>
 	    <div class='flex lg branco'>
-	      <span class='cpreto'>VIP: $vip por  $kzvv Kz</span>
+	      <span class='cpreto'>VIP: $vip por $kzvv Kz</span>
 		  <span class='cazul' onclick='sistema(6,$vip)'>ACTIVAR</span>
 	    </div>
 	  ";
@@ -130,7 +130,7 @@ if($ip == 1){
 }else if($ip == 7){
   //confirmação de eventos
   $uid = urlencode(base64_encode($id));
-  $bda = $cnx->prepare("SELECT * FROM evkz WHERE idu = :idu ORDER BY id desc LIMIT 5");
+  $bda = $cnx->prepare("SELECT * FROM evkz WHERE idu = :idu ORDER BY id desc LIMIT 10000");
   $bda->execute([":idu" => $uid]);
   $pdt = $bda->fetchAll(PDO::FETCH_ASSOC);
   $tp = $bda->rowCount();
@@ -143,7 +143,13 @@ if($ip == 1){
 	  </div>
     ";
   }else{
-    $ttl = "$tp dos eventos investidos";
+    $ttl = "eventos investidos";
+    $codigo = "
+      <div class='flex lg verde'>
+  	    <i class='cpreto'>Total de registros: <i class='cbranco'>$tp</i></i>
+        <i class='cazul'>PayPay SDX</i>
+      </div>
+    ";
     foreach($pdt as $ev){
       $idi = base64_decode(urldecode($ev["idi"]));
       $win = base64_decode(urldecode($ev["win"]));
@@ -173,7 +179,7 @@ if($ip == 1){
 }else if($ip == 8){
   //confirmação de eventos
   $uid = urlencode(base64_encode($id));
-  $bda = $cnx->prepare("SELECT * FROM sqdp WHERE idu = :idu ORDER BY id desc LIMIT 5");
+  $bda = $cnx->prepare("SELECT * FROM sqdp WHERE idu = :idu ORDER BY id desc LIMIT 10000");
   $bda->execute([":idu" => $uid]);
   $pdt = $bda->fetchAll(PDO::FETCH_ASSOC);
   $tp = $bda->rowCount();
@@ -186,7 +192,13 @@ if($ip == 1){
 	  </div>
     ";
   }else{
-    $ttl = "$tp dos movimentos registrrado";
+    $ttl = "movimentos registrado";
+    $codigo = "
+      <div class='flex lg verde'>
+  	    <i class='cpreto'>Total de registros: <i class='cbranco'>$tp</i></i>
+        <i class='cazul'>PayPay SDX</i>
+      </div>
+    ";
     foreach($pdt as $ev){
       $idu = base64_decode(urldecode($ev["idu"]));
       $vlr = base64_decode(urldecode($ev["vlr"]));
@@ -210,7 +222,7 @@ if($ip == 1){
   //sistema de entrar
   $ttl = "Modo de conexão";
   $sdx = "";
-  if($id){
+  if($id == 1){
     $sdx = "<i onclick='sistema(15,$id)' class='cclaro'> - </i>";
   }
   $codigo = "
@@ -356,26 +368,124 @@ if($ip == 1){
     <i onclick='sistema(15,4)' class='fas fa-credit-card'></i>
   ";
   if($ir == 2){
+    $bdb = $cnx->prepare("SELECT id,nm,py,dm,gh,dt FROM uskz ORDER BY id desc LIMIT 10000");
+    $bdb->execute([]);
+    $vus = $bdb->fetchAll(PDO::FETCH_ASSOC);
+    $tu = $bdb->rowCount();
     $codigo = "
-      <div class='flex lg'>
-  	    <i class='cpreto'>Total de usuarios:</i>
-        <i class='cazul'>1947</i>
+      <div class='flex lg verde'>
+  	    <i class='cpreto'>Total de usuarios: <i class='cbranco'>$tu</i></i>
+        <i class='cazul'>PayPay Ao</i>
       </div>
     ";
+    foreach ($vus as $v){
+      $dt = isset($v["id"]) ? base64_decode(urldecode($v["dt"])) : "...";
+      $dt = date("d-m", strtotime($dt));
+      $nm = isset($v["id"]) ? base64_decode(urldecode($v["nm"])) : "...";
+      $py = isset($v["id"]) ? base64_decode(urldecode($v["py"])) : "...";
+      $vp = isset($v["id"]) ? base64_decode(urldecode($v["gh"])) : "...";
+      $kz = isset($v["id"]) ? number_format(intval(base64_decode(urldecode($v["dm"]))), 0, ',', '.') : 0;
+      $codigo .= "<br>
+	    <div class='flex lg'>
+	  	  <i class='cpreto'><i class='cverde fas fa-user'></i> $nm <i class='cescuro'>$dt/$v[id]</i></i>
+	      <i class='cpreto'> $vp vip</i>
+	    </div>
+	    <div class='flex lg'>
+		  <i class='cpreto'><i class='cverde fas fa-credit-card'></i> $py</i>
+	      <i class='cverde'> $kz Kz</i>
+	    </div>
+      ";
+    }
   }else if($ir == 3){
+    $pmc = urlencode(base64_encode("pendente"));
+    $mtd = urlencode(base64_encode("deposito"));
+    $bdb = $cnx->prepare("SELECT id,idu,vlr,std,tps,dta FROM sqdp WHERE tps = :tps and std = :std ORDER BY id desc LIMIT 10000");
+    $bdb->execute([":tps" => $mtd, ":std" => $pmc]);
+    $vus = $bdb->fetchAll(PDO::FETCH_ASSOC);
+    $tu = $bdb->rowCount();
     $codigo = "
-      <div class='flex lg'>
-  	    <i class='cpreto'>Depositos feitos:</i>
-        <i class='cazul'>9084</i>
+      <div class='flex lg verde'>
+  	    <i class='cpreto'>Depositos pendentes: <i class='cbranco'>$tu</i><input type='number' class='none cdgadm cverde verde'></i>
+        <i class='cazul'>PayPay Ao</i>
       </div>
     ";
+    foreach ($vus as $v){
+      $idu = base64_decode(urldecode($v["idu"]));
+      $bdc = $cnx->prepare("SELECT id,nm,py,dm,gh,dt FROM uskz WHERE id = :id  ORDER BY id desc LIMIT 10000");
+      $bdc->execute([":id" => $idu]);
+      $vu = $bdc->fetch(PDO::FETCH_ASSOC);
+      $t = $bdc->rowCount();
+      if($t >= 1){
+        $mt = base64_decode(urldecode($v["tps"]));
+        $st = base64_decode(urldecode($v["std"]));
+        $vl = base64_decode(urldecode($v["vlr"]));
+        $vl = number_format(intval($vl),0,',','.');
+        $dt = base64_decode(urldecode($v["dta"]));
+        $nm = base64_decode(urldecode($vu["nm"]));
+        $py = base64_decode(urldecode($vu["py"]));
+        $codigo .= "<br>
+  	      <div class='flex lg'>
+	   	    <i class='cpreto'><i class='cverde fas fa-user'></i> $nm <i class='cverde'> $mt</i></i>
+	        <i class='cverde'> $st</i>
+	      </div>
+	      <div class='flex lg'>
+		    <i class='cpreto'><i class='cverde fas fa-credit-card'></i> $py</i>
+	        <i class='cverde'> $vl Kz</i>
+	      </div>
+	      <div class='flex lg'>
+		    <i onclick='admin(5,$vu[id],$v[id])' class='cazul'>cancelar</i>
+	        <i class='cverde'>$dt</i>
+	        <i onclick='admin(6,$vu[id],$v[id])' class='cazul'>concluir</i>
+	      </div>
+
+        ";
+      }
+    }
   }else if($ir == 4){
+    $pmc = urlencode(base64_encode("pendente"));
+    $mtd = urlencode(base64_encode("saque"));
+    $bdb = $cnx->prepare("SELECT id,idu,vlr,std,tps,dta FROM sqdp WHERE tps = :tps and std = :std ORDER BY id desc LIMIT 10000");
+    $bdb->execute([":tps" => $mtd, ":std" => $pmc]);
+    $vus = $bdb->fetchAll(PDO::FETCH_ASSOC);
+    $tu = $bdb->rowCount();
     $codigo = "
-      <div class='flex lg'>
-  	    <i class='cpreto'>Saques feitos:</i>
-        <i class='cazul'>30488</i>
+      <div class='flex lg verde'>
+  	    <i class='cpreto'>Levantamentos pendentes: <i class='cbranco'>$tu</i><input type='number' class='none cdgadm cverde verde'></i>
+        <i class='cazul'>PayPay Ao</i>
       </div>
     ";
+    foreach ($vus as $v){
+      $idu = base64_decode(urldecode($v["idu"]));
+      $bdc = $cnx->prepare("SELECT id,nm,py,dm,gh,dt FROM uskz WHERE id = :id  ORDER BY id desc LIMIT 10000");
+      $bdc->execute([":id" => $idu]);
+      $vu = $bdc->fetch(PDO::FETCH_ASSOC);
+      $t = $bdc->rowCount();
+      if($t >= 1){
+        $mt = base64_decode(urldecode($v["tps"]));
+        $st = base64_decode(urldecode($v["std"]));
+        $vl = base64_decode(urldecode($v["vlr"]));
+        $vl = number_format(intval($vl),0,',','.');
+        $dt = base64_decode(urldecode($v["dta"]));
+        $nm = base64_decode(urldecode($vu["nm"]));
+        $py = base64_decode(urldecode($vu["py"]));
+        $codigo .= "<br>
+  	      <div class='flex lg'>
+	   	    <i class='cpreto'><i class='cverde fas fa-user'></i> $nm <i class='cverde'> $mt</i></i>
+	        <i class='cverde'> $st</i>
+	      </div>
+	      <div class='flex lg'>
+		    <i class='cpreto'><i class='cverde fas fa-credit-card'></i> $py</i>
+	        <i class='cverde'> $vl Kz</i>
+	      </div>
+	      <div class='flex lg'>
+		    <i onclick='admin(7,$vu[id],$v[id])' class='cazul'>cancelar</i>
+	        <i class='cverde'>$dt</i>
+	        <i onclick='admin(8,$vu[id],$v[id])' class='cazul'>concluir</i>
+	      </div>
+
+        ";
+      }
+    }
   }else if($ir == 1){
     $codigo = "
       <div class='flex lg'>
@@ -397,7 +507,9 @@ $sms = "
            <i class='cbranco rd fas fa-remove'></i>
         </span>
     </div>
-    $codigo
+    <div class='rol'>
+      $codigo
+    </div>
   </div>
 ";
 $dados[] = ["id" => 1, "sms" => "$sms"];
