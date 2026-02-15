@@ -2,10 +2,11 @@
 include_once("bdsd.php");
 $rd = $_POST["cd"];
 $id = $_POST["id"];
-$bda = $cnx->prepare("SELECT id, dm FROM uskz WHERE id = :id LIMIT 1");
+$bda = $cnx->prepare("SELECT id, dm, gh FROM uskz WHERE id = :id LIMIT 1");
 $bda->execute([":id" => $id]);
 $vkz = $bda->fetch(PDO::FETCH_ASSOC);
 $kz = isset($vkz["id"]) ? number_format(intval(base64_decode(urldecode($vkz["dm"]))), 0, ',', '.') : "0";
+$vips = isset($vkz["id"]) ? intval(base64_decode(urldecode($vkz["gh"]))) : 0;
 
 $head = "
 <div class='rolcbc'>
@@ -27,7 +28,7 @@ $ctd = "
 <div class='h1'></div><br>
 <div class='cp claro cazul'>
   <div class='png ct'>
-    <i onclick='sistema(6,0)' class='cs tpnga cazul fas fa-medal'></i><br>VIP 0
+    <i onclick='sistema(6,0)' class='cs tpnga cazul fas fa-medal'></i><br>VIP $vips
   </div>
   <div class='txt cpreto'>
     <div class='flex div'>

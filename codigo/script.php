@@ -6,22 +6,51 @@ if($idn == 1){
   $win = urlencode(base64_encode("pendente"));
   $data = urlencode(base64_encode(date("Y/m/d")));
   $tot = urlencode(base64_encode("0"));
-  $stmtips = $cnx->prepare("SELECT * FROM rdkz WHERE data != :data and win = :win LIMIT 100");
-  $stmtips->execute([':data' => $data,':win' => $win]);
-  $ipvs = $stmtips->fetchAll(PDO::FETCH_ASSOC);
-  foreach($ipvs as $pai){
-	$d = base64_decode(urldecode($pai["dia"]));
-	$t = base64_decode(urldecode($pai["tot"]));
-    $t += 1;
-    $tt = urlencode(base64_encode($t));
-    if ($t >= $d) {
-      $w = urlencode(base64_encode("concluido"));
-      $stmtips = $cnx->prepare("UPDATE rdkz SET tot = :tot, win = :win, data = :data WHERE id = :id LIMIT 1");
-      $stmtips->execute([':id' => $pai["id"], ':tot' => $tt, ':win' => $w, ':data' => $data]);
-    }else {
-      $stmtips = $cnx->prepare("UPDATE rdkz SET tot = :tot, data = :data WHERE id = :id LIMIT 1");
-      $stmtips->execute([':id' => $pai["id"], ':tot' => $tt, ':data' => $data]);
-    }
+  //ppagar usuarios pelos eventos
+  $ev = $cnx->prepare("SELECT * FROM evkz WHERE win = :win GROUP BY id");
+  $ev->execute([':win' => $win]);
+  $vev = $ev->fetchAll(PDO::FETCH_ASSOC);
+  unlink("debug_log.txt");
+  foreach($vev as $v){
+   $idi = base64_decode(urldecode($v["idi"]));
+   $idu = base64_decode(urldecode($v["idu"]));
+   $rd = $cnx->prepare("SELECT * FROM rdkz WHERE id = :id LIMIT 1");
+   $rd->execute([':id' => $idi]);
+   $vrd = $rd->fetch(PDO::FETCH_ASSOC);
+   $us = $cnx->prepare("SELECT * FROM uskz WHERE id = :id LIMIT 1");
+   $us->execute([':id' => $idu]);
+   $vus = $us->fetch(PDO::FETCH_ASSOC);
+   $d = base64_decode(urldecode($vrd["dia"]));
+   $t = base64_decode(urldecode($vrd["tot"]));
+   $w = urlencode(base64_encode("concluido"));
+   $evs = $cnx->prepare("SELECT * FROM evkz WHERE id = :id LIMIT 1");
+   $evs->execute([':id' => $v["id"]]);
+   $vevs = $evs->fetch(PDO::FETCH_ASSOC);
+   if($data == $vrd["data"]){
+     if($win == $vevs["win"] && $t == $d && $idi == $vrd["id"] && $vus["id"] == $idu){
+       $dm = intval(base64_decode(urldecode($vus["dm"])));
+       $kz = intval(base64_decode(urldecode($v["kzg"])));
+       $vlr = $dm + $kz;
+       $vlr = urlencode(base64_encode($vlr));
+       //atualizar dadps 
+       $rd = $cnx->prepare("UPDATE rdkz SET win = :win WHERE id = :id");
+       $rd->execute([':win' => $w, ':id' => $vrd["id"]]);
+       $ev = $cnx->prepare("UPDATE evkz SET win = :win WHERE id = :id");
+       $ev->execute([':win' => $w, ':id' => $vevs["id"]]);
+       $us = $cnx->prepare("UPDATE uskz SET dm = :dm WHERE id = :id");
+       $us->execute([':dm' => $vlr, ':id' => $vus["id"]]);
+       //$file = 'debug_log.txt';
+       //$dtu = "$vevs[win] d: $d - $dm - t: $t -kz: $kz pg...\n";
+       //file_put_contents($file, $dtu, FILE_APPEND | LOCK_EX);
+     }
+   }else{
+     if($t < $d){
+       $t += 1;
+       $tt = urlencode(base64_encode($t));
+       $stmtips = $cnx->prepare("UPDATE rdkz SET tot = :tot, data = :data WHERE id = :id LIMIT 1");
+       $stmtips->execute([':id' => $idi, ':tot' => $tt, ':data' => $data]);
+     }
+   }
   }
   //saque painel
   $stmtip = $cnx->prepare("SELECT * FROM rdkz WHERE win = :win and tot = :tot and data = :data LIMIT 10");
